@@ -1,4 +1,4 @@
-name: Pixi Build (scipy-2.0)
+name: Build SciPy 2.0 paper
 
 on:
   push:
