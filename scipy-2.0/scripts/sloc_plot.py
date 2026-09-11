@@ -1,14 +1,18 @@
 import tempfile
 import subprocess
 import json
+import os
 
 from git import Repo
 import pandas as pd
 import matplotlib.pyplot as plt
 
-sloc_data = pd.DataFrame(columns=["Version", "Python", "C", "C++", "Fortran", "Cython"])
+plt.style.use("scripts/scipy.mplstyle")
 
-versions = [f"1.{i}.x" for i in range(19)]  # + ["2.0.x"]
+columns = ["Version", "Python", "C", "C++", "Fortran 77", "Cython"]
+sloc_data = pd.DataFrame(columns=columns)
+
+versions = [f"1.{i}.x" for i in range(19)] + ["2.0.x"]
 
 with tempfile.TemporaryDirectory() as tmpdirname:
     print(f"Cloning into temporary directory: {tmpdirname}")
@@ -17,11 +21,24 @@ with tempfile.TemporaryDirectory() as tmpdirname:
     for i, version in enumerate(versions):
         print(f"Checking out version: {version}")
         branch = f"maintenance/{version}"
+        # XXX: remove this once 2.0.x is released
+        if branch == "maintenance/2.0.x":
+            branch = "main"
+
+        repo.git.clean("-ffdx")
+        if branch == "maintenance/1.17.x":
+            subprocess.run(["rm", "-rf", "scipy/sparse/linalg/_propack/PROPACK"],
+                           cwd=tmpdirname)
+
         repo.git.checkout(branch)
-        repo.git.clean("-xdf")
+        repo.git.clean("-ffdx")
         repo.git.submodule("update", "--init", "--recursive")
+        if os.path.exists(os.path.join(tmpdirname, "subprojects")):
+            dirs = ["scipy", "subprojects"]
+        else:
+            dirs = ["scipy"]
         data = subprocess.run(
-            ["tokei", "scipy", "-o", "json"],
+            ["tokei"] + dirs + ["-o", "json"],
             cwd=tmpdirname,
             capture_output=True,
             text=True,
@@ -34,16 +51,17 @@ with tempfile.TemporaryDirectory() as tmpdirname:
             + json_data.get("C Header", {}).get("code", 0),
             json_data.get("C++", {}).get("code", 0)
             + json_data.get("C++ Header", {}).get("code", 0),
-            json_data.get("FORTRAN Legacy").get("code", 0),
+            json_data.get("FORTRAN Legacy", {}).get("code", 0),
             json_data.get("Cython", {}).get("code", 0),
         ]
 
-fig, ax = plt.subplots(figsize=(10, 6), layout="constrained")
-for language in ["Python", "C", "C++", "Fortran", "Cython"]:
-    ax.plot(range(len(sloc_data["Version"])), sloc_data[language], label=language)
-ax.set_xlabel("Version")
-ax.set_ylabel("Lines of Code")
+fig, ax = plt.subplots(figsize=(5, 3), layout="constrained")
+for language in columns[1:]:
+    ax.semilogy(range(len(sloc_data["Version"])), sloc_data[language], label=language)
+ax.set_xlabel("SciPy Version")
+ax.set_ylabel("SLOC")
 ax.set_xticks(range(len(sloc_data["Version"])))
-ax.set_xticklabels(sloc_data["Version"])
-ax.legend()
+ax.set_xticklabels(s.rstrip(".x") for s in sloc_data["Version"])
+fig.legend(ncols=5, loc="outside lower center")
 plt.xticks(rotation=45)
+plt.show()
