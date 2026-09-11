@@ -55,13 +55,14 @@ with tempfile.TemporaryDirectory() as tmpdirname:
             json_data.get("Cython", {}).get("code", 0),
         ]
 
-fig, ax = plt.subplots(figsize=(5, 3), layout="constrained")
+fig, ax = plt.subplots(figsize=(4.5, 2.5), layout="constrained")
 for language in columns[1:]:
     ax.semilogy(range(len(sloc_data["Version"])), sloc_data[language], label=language)
 ax.set_xlabel("SciPy Version")
 ax.set_ylabel("SLOC")
 ax.set_xticks(range(len(sloc_data["Version"])))
+ax.set_xlim(0, len(sloc_data["Version"])-1)
 ax.set_xticklabels(s.rstrip(".x") for s in sloc_data["Version"])
-fig.legend(ncols=5, loc="outside lower center")
+fig.legend(ncols=5, loc="outside upper center")
 plt.xticks(rotation=45)
 plt.show()
