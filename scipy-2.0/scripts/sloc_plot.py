@@ -2,10 +2,13 @@ import tempfile
 import subprocess
 import json
 import os
+import shutil
+from pathlib import Path
 
 from git import Repo
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 plt.style.use("scripts/scipy.mplstyle")
 
@@ -16,8 +19,8 @@ versions = [f"1.{i}.x" for i in range(19)] + ["2.0.x"]
 
 with tempfile.TemporaryDirectory() as tmpdirname:
     print(f"Cloning into temporary directory: {tmpdirname}")
-    repo = Repo.clone_from("https://github.com/scipy/scipy", tmpdirname)
-
+    repo = Repo.clone_from("https://github.com/scipy/scipy", tmpdirname,
+                           multi_options=["--depth=1", "--no-single-branch"])
     for i, version in enumerate(versions):
         print(f"Checking out version: {version}")
         branch = f"maintenance/{version}"
@@ -33,6 +36,18 @@ with tempfile.TemporaryDirectory() as tmpdirname:
         repo.git.checkout(branch)
         repo.git.clean("-ffdx")
         repo.git.submodule("update", "--init", "--recursive")
+
+        # At one point SciPy wrapped the entire Boost library when we really only used
+        # Boost.Math so we don't count the rest of Boost in our SLOC numbers.
+        boost_dir = Path(tmpdirname) / "scipy" / "_lib" / "boost" / "boost"
+        if boost_dir.exists():
+            for path in boost_dir.iterdir():
+                if path.name != "math":
+                    if path.is_dir():
+                        shutil.rmtree(path)
+                    else:
+                        path.unlink()
+
         if os.path.exists(os.path.join(tmpdirname, "subprojects")):
             dirs = ["scipy", "subprojects"]
         else:
@@ -56,8 +71,15 @@ with tempfile.TemporaryDirectory() as tmpdirname:
         ]
 
 fig, ax = plt.subplots(figsize=(4.5, 2.5), layout="constrained")
-for language in columns[1:]:
-    ax.semilogy(range(len(sloc_data["Version"])), sloc_data[language], label=language)
+ax.stackplot(
+    range(len(sloc_data["Version"])),
+    sloc_data["Python"],
+    sloc_data["Cython"],
+    sloc_data["Fortran 77"],
+    sloc_data["C"],
+    sloc_data["C++"],
+    labels=["Python", "Cython", "Fortran 77", "C", "C++"]
+)
 ax.set_xlabel("SciPy Version")
 ax.set_ylabel("SLOC")
 ax.set_xticks(range(len(sloc_data["Version"])))

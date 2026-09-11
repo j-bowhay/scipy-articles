@@ -144,10 +144,7 @@ indefinitely.
     \centering
     \includegraphics{figures/sloc.pdf}
     \caption{Source lines of code (SLOC) in SciPy by programming language. This count
-    includes the multitude of libraries that are wrapped by SciPy. The large
-    increase in C++ code in versions 1.6 and 1.7 corresponds with the addition of the
-    HiGHS library~\cite{Huangfu2017} (used for linear optimization) and
-    Boost.\@Math~\cite{boostmath}.}\label{fig:sloc}
+    includes the libraries that are wrapped by SciPy.}\label{fig:sloc}
 \end{figure}
 
 After careful evaluation of the above issues, it was decided that these
@@ -169,7 +166,7 @@ discussed below.
 Such developments were previously infeasible
 due to the lack of expertise in Fortran 77 within the SciPy developer community.
 Following these changes, SciPy 2.0 contains no Fortran, as illustrated in
-Figure~\ref{fig:sloc}, which shows how the language composition of SciPy has changed
+Figure~\ref{fig:sloc} which shows how the language composition of SciPy has changed
 since SciPy 1.0.
 
 \begin{acks}
