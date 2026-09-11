@@ -225,7 +225,7 @@ integrand at points that are independent and identically distributed (IID) unifo
 samples~\cite{Hammersley1960}. It is well known that, provided the integrand is square integrable,
 then this approach has a probabilistic error bound of the form $O(n^{-1/2})$, where $n$
 is the number of points the integrand is sampled at. While crucially this convergence
-rate is independent of the dimensionality of the problem, it is still a rather slow.
+rate is independent of the dimensionality of the problem, it is still rather slow.
 This led to the development of Quasi-Monte Carlo (QMC) methods,
 for which the sample points are chosen deterministically to achieve a faster convergence
 rate. This is achieved by choosing points that are more evenly distributed than random
@@ -283,7 +283,7 @@ Likewise, QMC methods can be used to generate samples from black box distributio
 \texttt{scipy.stats.sampling}, as described in \jake{XREF sectrion when written}, and
 from predefined distributions using the new statistical distributions infrastructure
 described in \jake{XREF section when written}.
-\jake{This is the section I am least sure about, is there some theory or liturature
+\jake{This is the section I am least sure about, is there some theory or literature
 we can point to about why this is desirable.}
 
 Another new feature in SciPy 2.0 that utilizes QMC methods is the new functionality
