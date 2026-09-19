@@ -8,7 +8,6 @@ from pathlib import Path
 from git import Repo
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 
 plt.style.use("scripts/scipy.mplstyle")
 
@@ -35,7 +34,8 @@ with tempfile.TemporaryDirectory() as tmpdirname:
 
         repo.git.checkout(branch)
         repo.git.clean("-ffdx")
-        repo.git.submodule("update", "--init", "--recursive")
+        repo.git.submodule("update", "--init", "--recursive", "--jobs", "8",
+                           "--depth", "1")
 
         # At one point SciPy wrapped the entire Boost library when we really only used
         # Boost.Math so we don't count the rest of Boost in our SLOC numbers.
