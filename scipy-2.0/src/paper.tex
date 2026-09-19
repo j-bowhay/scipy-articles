@@ -143,8 +143,11 @@ indefinitely.
 \begin{figure}
     \centering
     \includegraphics{figures/sloc.pdf}
-    \caption{Source lines of code (SLOC) in SciPy by programming language. This count
-    includes the libraries that are wrapped by SciPy.}\label{fig:sloc}
+    \caption{Source lines of code (SLOC) in SciPy by programming language. Here,
+    libraries that are wrapped by SciPy and are actively maintained projects themselves,
+    e.g.\ Boost.\@Math~\cite{boostmath} and HiGHS~\cite{Huangfu2017}, are excluded.
+    For a complete count including these libraries, see Figure~\ref{fig:sloc_all} in
+    Appendix~\ref{sec:appendix_sloc}.}\label{fig:sloc}
 \end{figure}
 
 After careful evaluation of the above issues, it was decided that these
@@ -250,5 +253,14 @@ and Tidelift for their regular donations to the project.
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
 
+\appendix
+\section{Additional SLOC Plots}\label{sec:appendix_sloc}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{figures/sloc_all.pdf}
+    \caption{Source lines of code (SLOC) in SciPy by programming language including all
+    libraries that are wrapped by SciPy.}\label{fig:sloc_all}
+\end{figure}
 \end{document}
 \endinput
