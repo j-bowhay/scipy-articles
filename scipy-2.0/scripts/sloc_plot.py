@@ -17,6 +17,11 @@ parser.add_argument(
     action="store_true",
     help="Include all code, not just the parts SciPy maintains.",
 )
+parser.add_argument(
+    "--save",
+    action="store_true",
+    help="Save the plot to the figures directory."
+)
 args = parser.parse_args()
 
 
@@ -139,6 +144,7 @@ ax.stackplot(
     sloc_data["C"],
     sloc_data["C++"],
     labels=["Python", "Cython", "Fortran 77", "C", "C++"],
+    rasterized=True
 )
 ax.set_xlabel("SciPy Version")
 ax.set_ylabel("SLOC")
@@ -147,4 +153,10 @@ ax.set_xlim(0, len(sloc_data["Version"]) - 1)
 ax.set_xticklabels(s.rstrip(".x") for s in sloc_data["Version"])
 fig.legend(ncols=5, loc="outside upper center")
 plt.xticks(rotation=45)
+
+if args.save:
+    figures_dir = Path(__file__).parent.parent / "src" / "figures"
+    name = "sloc_all.pdf" if args.all else "sloc.pdf"
+    plt.savefig(figures_dir / name, dpi=600)
+
 plt.show()
