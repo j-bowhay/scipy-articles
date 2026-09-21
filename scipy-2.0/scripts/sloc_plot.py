@@ -21,9 +21,37 @@ args = parser.parse_args()
 
 
 columns = ["Version", "Python", "C", "C++", "Fortran 77", "Cython"]
-sloc_data = pd.DataFrame(columns=columns)
+
+# remove code from https://github.com/scipy/scipy/issues/21232 except the
+# parts that are inactive upstream.
+REMOVED_PATHS = [
+    "scipy/_lib/boost",
+    "scipy/_lib/boost_math",
+    "scipy/spatial/qhull_src",
+    "scipy/spatial/qhull",  # old location
+    "scipy/fft/_pocketfft",
+    "scipy/fft/_duccfft",
+    "scipy/_lib/pyprima",
+    "scipy/_lib/_pep440.py",
+    "scipy/_lib/array_api_compat",
+    "scipy/_lib/array_api_extra",
+    "scipy/_lib/cobyqa",
+    "scipy/optimize/_highs",
+    "scipy/_lib/highs",
+    "scipy/_lib/unuran",
+    "scipy/optimize/_direct",
+    "scipy/sparse/linalg/_dsolve/SuperLU",
+    "scipy/sparse/linalg/dsolve/SuperLU",  # old location
+    "scipy/optimize/_trlib",
+    "scipy/_lib/_uarray",
+    "scipy/_build_utils/tempita",
+    "scipy/stats/libnpyrandom",
+    "scipy/_lib/_docscrape.py",
+]
 
 versions = [f"1.{i}.x" for i in range(19)] + ["2.0.x"]
+
+rows = []
 
 with tempfile.TemporaryDirectory() as tmpdirname:
     print(f"Cloning into temporary directory: {tmpdirname}")
@@ -41,8 +69,9 @@ with tempfile.TemporaryDirectory() as tmpdirname:
 
         repo.git.clean("-ffdx")
         if branch == "maintenance/1.17.x":
-            subprocess.run(
-                ["rm", "-rf", "scipy/sparse/linalg/_propack/PROPACK"], cwd=tmpdirname
+            shutil.rmtree(
+                Path(tmpdirname) / "scipy/sparse/linalg/_propack/PROPACK",
+                ignore_errors=True,
             )
 
         repo.git.checkout(branch)
@@ -67,98 +96,12 @@ with tempfile.TemporaryDirectory() as tmpdirname:
             else:
                 dirs = ["scipy"]
         else:
-            # remove code from https://github.com/scipy/scipy/issues/21232 except the
-            # parts that are inactive upstream
-            boost_dir = Path(tmpdirname) / "scipy" / "_lib" / "boost"
-            if boost_dir.exists():
-                shutil.rmtree(boost_dir)
-            boost_math_dir = Path(tmpdirname) / "scipy" / "_lib" / "boost_math"
-            if boost_math_dir.exists():
-                shutil.rmtree(boost_math_dir)
-
-            qhull_dir = Path(tmpdirname) / "scipy" / "spatial" / "qhull_src"
-            if qhull_dir.exists():
-                shutil.rmtree(qhull_dir)
-            # old location
-            qhull_dir = Path(tmpdirname) / "scipy" / "spatial" / "qhull"
-            if qhull_dir.exists():
-                shutil.rmtree(qhull_dir)
-
-            pocketfft_dir = Path(tmpdirname) / "scipy" / "fft" / "_pocketfft"
-            if pocketfft_dir.exists():
-                shutil.rmtree(pocketfft_dir)
-            duccfft_dir = Path(tmpdirname) / "scipy" / "fft" / "_duccfft"
-            if duccfft_dir.exists():
-                shutil.rmtree(duccfft_dir)
-
-            pyprima_dir = Path(tmpdirname) / "scipy" / "_lib" / "pyprima"
-            if pyprima_dir.exists():
-                shutil.rmtree(pyprima_dir)
-
-            _pep440 = Path(tmpdirname) / "scipy" / "_lib" / "_pep440.py"
-            if _pep440.exists():
-                _pep440.unlink()
-            array_api_compat_dir = (
-                Path(tmpdirname) / "scipy" / "_lib" / "array_api_compat"
-            )
-            if array_api_compat_dir.exists():
-                shutil.rmtree(array_api_compat_dir)
-            array_api_extra_dir = (
-                Path(tmpdirname) / "scipy" / "_lib" / "array_api_extra"
-            )
-            if array_api_extra_dir.exists():
-                shutil.rmtree(array_api_extra_dir)
-
-            cobyqa_dir = Path(tmpdirname) / "scipy" / "_lib" / "cobyqa"
-            if cobyqa_dir.exists():
-                shutil.rmtree(cobyqa_dir)
-
-            highs_dir = Path(tmpdirname) / "scipy" / "optimize" / "_highs"
-            if highs_dir.exists():
-                shutil.rmtree(highs_dir)
-            highs_dir = Path(tmpdirname) / "scipy" / "_lib" / "highs"
-            if highs_dir.exists():
-                shutil.rmtree(highs_dir)
-
-            unuran_dir = Path(tmpdirname) / "scipy" / "_lib" / "unuran"
-            if unuran_dir.exists():
-                shutil.rmtree(unuran_dir)
-
-            direct_dir = Path(tmpdirname) / "scipy" / "optimize" / "_direct"
-            if direct_dir.exists():
-                shutil.rmtree(direct_dir)
-
-            superlu_dir = (
-                Path(tmpdirname) / "scipy" / "sparse" / "linalg" / "_dsolve" / "SuperLU"
-            )
-            if superlu_dir.exists():
-                shutil.rmtree(superlu_dir)
-            # old location
-            superlu_dir = (
-                Path(tmpdirname) / "scipy" / "sparse" / "linalg" / "dsolve" / "SuperLU"
-            )
-            if superlu_dir.exists():
-                shutil.rmtree(superlu_dir)
-
-            trlib_dir = Path(tmpdirname) / "scipy" / "optimize" / "_trlib"
-            if trlib_dir.exists():
-                shutil.rmtree(trlib_dir)
-
-            uarray_dir = Path(tmpdirname) / "scipy" / "_lib" / "_uarray"
-            if uarray_dir.exists():
-                shutil.rmtree(uarray_dir)
-
-            tempita_dir = Path(tmpdirname) / "scipy" / "_build_utils" / "tempita"
-            if tempita_dir.exists():
-                shutil.rmtree(tempita_dir)
-
-            libnpyrandom_dir = Path(tmpdirname) / "scipy" / "stats" / "libnpyrandom"
-            if libnpyrandom_dir.exists():
-                shutil.rmtree(libnpyrandom_dir)
-
-            docscrape = Path(tmpdirname) / "scipy" / "_lib" / "_docscrape.py"
-            if docscrape.exists():
-                docscrape.unlink()
+            for rel in REMOVED_PATHS:
+                p = Path(tmpdirname) / rel
+                if p.is_dir():
+                    shutil.rmtree(p)
+                elif p.exists():
+                    p.unlink()
 
             dirs = ["scipy"]
             if (Path(tmpdirname) / "subprojects" / "xsf").exists():
@@ -172,16 +115,20 @@ with tempfile.TemporaryDirectory() as tmpdirname:
             text=True,
         )
         json_data = json.loads(data.stdout)
-        sloc_data.loc[i] = [
-            version,
-            json_data.get("Python", {}).get("code", 0),
-            json_data.get("C", {}).get("code", 0)
-            + json_data.get("C Header", {}).get("code", 0),
-            json_data.get("C++", {}).get("code", 0)
-            + json_data.get("C++ Header", {}).get("code", 0),
-            json_data.get("FORTRAN Legacy", {}).get("code", 0),
-            json_data.get("Cython", {}).get("code", 0),
-        ]
+        rows.append(
+            [
+                version,
+                json_data.get("Python", {}).get("code", 0),
+                json_data.get("C", {}).get("code", 0)
+                + json_data.get("C Header", {}).get("code", 0),
+                json_data.get("C++", {}).get("code", 0)
+                + json_data.get("C++ Header", {}).get("code", 0),
+                json_data.get("FORTRAN Legacy", {}).get("code", 0),
+                json_data.get("Cython", {}).get("code", 0),
+            ]
+        )
+
+sloc_data = pd.DataFrame(rows, columns=columns)
 
 fig, ax = plt.subplots(figsize=(4.5, 2.5), layout="constrained")
 ax.stackplot(
