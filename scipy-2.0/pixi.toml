@@ -31,8 +31,11 @@ pandas = ">=3.0.5,<4"
 [feature.plot.tasks]
 plot-sloc = { cmd = "python scripts/sloc_plot.py", description = "Make SLOC figure" }
 
+[feature.plot.pypi-dependencies]
+mpl-tectonic = ">=0.1.0, <0.2"
+
 [environments]
 default = ["python", "latex"]
 latex = ["latex"]
 python = ["python"]
-plot = ["python", "plot", "numpy"]
+plot = ["python", "plot", "numpy", "latex"]

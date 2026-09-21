@@ -8,7 +8,9 @@ import argparse
 from git import Repo
 import pandas as pd
 import matplotlib.pyplot as plt
+import mpl_tectonic
 
+mpl_tectonic.enable()
 plt.style.use("scripts/scipy.mplstyle")
 
 parser = argparse.ArgumentParser(description="Plot SLOC for SciPy versions")
