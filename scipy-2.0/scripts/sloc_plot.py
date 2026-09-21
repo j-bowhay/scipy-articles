@@ -146,6 +146,7 @@ ax.stackplot(
     sloc_data["C"],
     sloc_data["C++"],
     labels=["Python", "Cython", "Fortran 77", "C", "C++"],
+    colors=["#3572A5", "#FEDF5B", "#8478DF", "#555555", "#E2557D"],
     rasterized=True
 )
 ax.set_xlabel("SciPy Version")
