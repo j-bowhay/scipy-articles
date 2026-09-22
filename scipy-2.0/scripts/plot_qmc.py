@@ -1,11 +1,23 @@
-import os
+from pathlib import Path
 from string import ascii_uppercase
+import argparse
 
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import qmc
+import mpl_tectonic
 
-plt.style.use(os.path.join(os.path.dirname(__file__), "scipy.mplstyle"))
+
+mpl_tectonic.enable()
+plt.style.use(Path(__file__).parent / "scipy.mplstyle")
+
+parser = argparse.ArgumentParser(description="Plot different QMC methods")
+parser.add_argument(
+    "--save",
+    action="store_true",
+    help="Save the plot to the figures directory."
+)
+args = parser.parse_args()
 
 fig, axs = plt.subplots(1, 5, constrained_layout=True, figsize=(5.48, 1.4))
 
@@ -42,5 +54,9 @@ for ax, (title, sampler), letter in zip(axs, methods, ascii_uppercase):
     ax.set_ylim(0, 1)
     ax.set_xticks([])
     ax.set_yticks([])
+
+if args.save:
+    figures_dir = Path(__file__).parent.parent / "src" / "figures"
+    plt.savefig(figures_dir / "qmc.pdf")
 
 plt.show()
