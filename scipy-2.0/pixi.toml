@@ -24,12 +24,19 @@ numpy = ">=2.0"
 
 [feature.plot.dependencies]
 matplotlib = "*"
+gitpython = ">=3.1.61,<4"
+tokei = ">=14.0.0,<15"
+pandas = ">=3.0.5,<4"
 
 [feature.plot.tasks]
+plot-sloc = { cmd = "python scripts/sloc_plot.py", description = "Make SLOC figure" }
 plot-qmc = { cmd = "python scripts/plot_qmc.py", description = "Make QMC figure" }
+
+[feature.plot.pypi-dependencies]
+mpl-tectonic = ">=0.1.0, <0.2"
 
 [environments]
 default = ["python", "latex"]
 latex = ["latex"]
 python = ["python"]
-plot = ["python", "plot", "numpy"]
+plot = ["python", "plot", "numpy", "latex"]
