@@ -23,7 +23,6 @@ python = ">=3.12"
 
 [feature.python.pypi-dependencies]
 scipy = { index = "https://pypi.anaconda.org/scientific-python-nightly-wheels/simple" }
-packaging = "*"
 
 [feature.coverage-table.dependencies]
 pandas = ">=3.0"
@@ -84,14 +83,21 @@ cmd = """
 description = "Run the benchmarks"
 }
 
-[feature.plot.dependencies]
-matplotlib = "*"
-
-[feature.plot.tasks]
-plot-benchmark = { cmd = "python scripts/plot_benchmark.py", description = "Plot the benchmark results" }
-
 [feature.cupy]
 platforms = ["linux-64-cuda"]
+
+[feature.plot.dependencies]
+matplotlib = "*"
+gitpython = ">=3.1.61,<4"
+tokei = ">=14.0.0,<15"
+pandas = ">=3.0.5,<4"
+
+[feature.plot.tasks]
+plot-sloc = { cmd = "python scripts/sloc_plot.py", description = "Make SLOC figure" }
+plot-benchmark = { cmd = "python scripts/plot_benchmark.py", description = "Plot the benchmark results" }
+
+[feature.plot.pypi-dependencies]
+mpl-tectonic = ">=0.1.0, <0.2"
 
 [environments]
 default = ["python", "latex"]
@@ -104,5 +110,5 @@ pytorch-gpu = ["python", "pytorch-gpu"]
 jax-cpu = ["python", "jax-cpu"]
 jax-gpu = ["python", "jax-gpu"]
 cupy = ["python", "cupy"]
-plot = ["python", "plot", "numpy"]
 run-benchmark = ["run-benchmark"]
+plot = ["python", "plot", "numpy", "latex"]
