@@ -5,7 +5,9 @@ import argparse
 
 import matplotlib.pyplot as plt
 import numpy as np
+import mpl_tectonic
 
+mpl_tectonic.enable()
 plt.style.use("scripts/scipy.mplstyle")
 
 parser = argparse.ArgumentParser()
