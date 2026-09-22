@@ -32,8 +32,8 @@ methods = [
     (
         "Poisson disk",
         lambda: qmc.PoissonDisk(
-            d=2, radius=0.1, rng=rng, ncandidates=1000, hypersphere="surface"
-        ).fill_space(),
+            d=2, radius=0.085, rng=rng, ncandidates=1000, hypersphere="surface"
+        ).random(n),
     ),
 ]
 
