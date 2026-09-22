@@ -108,8 +108,8 @@ CDFLIB~\cite{Brown1994CDFLIB}, mvndist~\cite{Genz1992}, and
 statlib~\cite{Dinneen1976,Best1975,Royston1995,Maclaren1985} for probability
 distributions and statistical functions;
 and FFTPACK~\cite{Swarztrauber1982} for fast Fourier transforms.
-Consequently, SciPy 1.0 consisted of approximately $50\%$ Python, $25\%$ Fortran,
-$20\%$ C, $3\%$ Cython, and $2\%$ C++ code~\cite{Virtanen2020}.
+Consequently, SciPy 1.0 consisted of approximately $25\%$ Fortran,
+second only to Python ($50\%$)~\cite{Virtanen2020}.
 
 Despite the enormous utility these codes have provided, they also presented a number
 of challenges on the road to SciPy 2.0. By far the most significant of these was
@@ -140,6 +140,16 @@ improve these routines. This was further compounded by a lack of expertise in Fo
 77 within the SciPy developer community, which often led to bugs remaining unresolved
 indefinitely.
 
+\begin{figure}
+    \centering
+    \includegraphics{figures/sloc.pdf}
+    \caption{Source lines of code (SLOC) in SciPy by programming language.
+    Libraries that are wrapped by SciPy and are actively maintained projects themselves,
+    e.g.\ Boost.\@Math~\cite{boostmath} and HiGHS~\cite{Huangfu2017}, are excluded.
+    For the SLOC including these libraries see Figure~\ref{fig:sloc_all} in
+    Appendix~\ref{sec:appendix_sloc}.}\label{fig:sloc}
+\end{figure}
+
 After careful evaluation of the above issues, it was decided that these
 codes needed either to be replaced with
 more recent, actively maintained alternatives, or to be translated from their
@@ -155,16 +165,12 @@ SciPy 2.0, leading to the resolution of the challenges described above as well a
 long-standing bugs. Furthermore, these translations provide the foundation for
 future development and improvements, for example, improved special functions, as
 discussed below.
-
 \jake{Add a forward reference to the relevant section.}
-
 Such developments were previously infeasible
 due to the lack of expertise in Fortran 77 within the SciPy developer community.
-Following these changes, SciPy 2.0 contains no Fortran.
-
-\jake{We may want to revisit
-this and give percentages like in the 1.0 paper but we need to decide if we would
-include the subprojects directory.}
+Following these changes, SciPy 2.0 contains no Fortran, as illustrated by
+Figure~\ref{fig:sloc}, which shows how the language composition of SciPy has changed
+since version 1.0.
 
 \section{Universal Random Variate Generation Methods}
 
@@ -247,5 +253,14 @@ and Tidelift for their regular donations to the project.
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
 
+\appendix
+\section{Additional SLOC Plots}\label{sec:appendix_sloc}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{figures/sloc_all.pdf}
+    \caption{Source lines of code (SLOC) in SciPy by programming language, including all
+    libraries that are wrapped by SciPy.}\label{fig:sloc_all}
+\end{figure}
 \end{document}
 \endinput
