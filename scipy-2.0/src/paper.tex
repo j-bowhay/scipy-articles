@@ -120,14 +120,20 @@ JAX~\cite{jax2018github}, and PyTorch~\cite{Ansel2024}, which provide support fo
 capabilities (among other features). This has
 effectively led to a dichotomy: SciPy cannot utilize the new features offered by these
 libraries, and these new array libraries cannot make full use of the large amount of
-functionality SciPy provides.
+functionality SciPy provides. Furthermore, as SciPy provides the foundational methods
+for many other scientific Python packages, this also prevents these packages from
+taking advantage of these developments.
 
 Addressing this fragmentation through the Python array API standard~\cite{Meurer2023} has been a
 major focus of SciPy 2.0. This standard defines application
 programming interfaces (APIs) and behaviours for arrays and their
 associated operations. Most importantly for SciPy, this enables
 ``array-consuming libraries to accept and operate on arrays from multiple different
-array libraries''~\cite{Meurer2023}. In principle, by rewriting SciPy's functionality
+array libraries''~\cite{Meurer2023}. In doing so, this also enables libraries that are
+heavily reliant on SciPy, such as scikit-learn~\cite{scikit-learn,sklearn_api}, to
+begin adopting the Python array API standard themselves.
+
+In principle, by rewriting SciPy's functionality
 in terms of these standardised APIs, SciPy can support any array package that
 implements the standard. However, in practice, there are a number of barriers to this
 interoperable ideal.
