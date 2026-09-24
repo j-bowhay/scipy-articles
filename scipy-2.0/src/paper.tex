@@ -172,7 +172,7 @@ Following these changes, SciPy 2.0 contains no Fortran, as illustrated by
 Figure~\ref{fig:sloc}, which shows how the language composition of SciPy has changed
 since version 1.0.
 
-\section{When Random is not Good Enough: New Functionality for Quasi-Monte Methods}
+\section{When Random is not Good Enough: New Functionality for Quasi-Monte Carlo Methods}
 
 Both NumPy~\cite{Harris2020} and SciPy provide functionality for generating
 (pseudo)random numbers following a multitude of different distributions. These
@@ -207,7 +207,7 @@ methods~\cite{Art2020}.
     associated centred discrepancy ($\mathrm{CD}^2$) --- a smaller numerical value is
     better. We generate $n=128$ points in
     $[0,1]^2$ using (A) IID uniform random sampling, (B) Sobol'
-    sequence, (C) Halton sequence, and (D) Latin hypercube sampling (LHS), (E) Poisson
+    sequence, (C) Halton sequence, (D) Latin hypercube sampling (LHS), and (E) Poisson
     disk sampling with a minimum distance of $0.085$ between points. For panels (B)--(D)
     we use the scrambled versions of the sequences.}
     \label{fig:qmc}
@@ -258,7 +258,7 @@ described in \jake{XREF section when written}.
 we can point to about why this is desirable.}
 
 Another new feature in SciPy 2.0 that utilizes QMC methods is the new functionality
-in \texttt{scipy.stats} for global sensitivity analysis (GSA) using Sobol'
+\texttt{scipy.stats.sobol\_indices} for global sensitivity analysis (GSA) using Sobol'
 indices~\cite{Sobol1993,Sobol2001}. This function helps users to determine how much
 of the variance in the output of their model can be attributed to each of the input
 parameters and uses QMC methods to generate the function samples required to compute the
