@@ -1,15 +1,15 @@
 """Generate table showing array API compatibility statistics for the SciPy modules."""
 
 from scipy._lib._public_api import PUBLIC_MODULES
-from scipy._lib._array_api_docs_tables import calculate_table_statistics
-from scipy._lib._array_api_docs_tables import make_flat_capabilities_table
+from scipy._lib._array_api_docs_tables import (calculate_table_statistics,
+                                               make_flat_capabilities_table)
 import pandas as pd
 
 included_modules = [
     module
     for module in PUBLIC_MODULES
-    # These are extension modules which should never be included. The introspection
-    # in make_flat_capabilities_table will fail for these.
+    # These are extension modules which should never be included. They are either
+    # or the introspection does not work.
     if module
     not in {
         "scipy.linalg.cython_blas",
@@ -17,6 +17,7 @@ included_modules = [
         "scipy.odr",
         "scipy.fftpack",
         "scipy.stats.mstats",
+        "scipy.stats.distributions",
         "scipy.linalg.blas",
         "scipy.linalg.lapack",
         "scipy.io",

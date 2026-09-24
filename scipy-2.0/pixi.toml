@@ -23,6 +23,7 @@ python = ">=3.12"
 
 [feature.python.pypi-dependencies]
 scipy = { index = "https://pypi.anaconda.org/scientific-python-nightly-wheels/simple" }
+packaging = "*"
 
 [feature.coverage-table.dependencies]
 pandas = ">=3.0"
