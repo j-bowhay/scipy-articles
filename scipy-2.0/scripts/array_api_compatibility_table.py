@@ -35,6 +35,7 @@ df_cpu.rename(
     columns={col: f"{col}_cpu" for col in df_cpu.columns if col != "total"},
     inplace=True,
 )
+df_cpu = df_cpu.groupby(df_cpu.index.to_series().str.split('.').str[:2].str.join('.')).sum()
 df_cpu_percent = (
     df_cpu.loc[:, df_cpu.columns != "total"]
     .div(df_cpu["total"], axis=0)
@@ -50,6 +51,7 @@ df_gpu.rename(
     columns={col: f"{col}_gpu" for col in df_gpu.columns if col != "total"},
     inplace=True,
 )
+df_gpu = df_gpu.groupby(df_gpu.index.to_series().str.split('.').str[:2].str.join('.')).sum()
 df_gpu_percent = (
     df_gpu.loc[:, df_gpu.columns != "total"]
     .div(df_gpu["total"], axis=0)
@@ -64,6 +66,7 @@ df_jit.rename(
     columns={col: f"{col}_jit" for col in df_jit.columns if col != "total"},
     inplace=True,
 )
+df_jit = df_jit.groupby(df_jit.index.to_series().str.split('.').str[:2].str.join('.')).sum()
 df_jit_percent = (
     df_jit.loc[:, df_jit.columns != "total"]
     .div(df_jit["total"], axis=0)
