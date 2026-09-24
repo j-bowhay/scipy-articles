@@ -209,6 +209,17 @@ performance benefit. For example, when executed on a GPU, a Python implementatio
 outperform a compiled implementation executed on the CPU --- see
 Figure~\ref{fig:benchmarks}(c).
 
+Across all three approaches, there are a number of design principles that SciPy has
+adopted in order to manage potential complications associated with accepting multiple
+array types. First, the input array type and device on which the array is located is
+preserved. Second, users cannot mix array types or arrays located on different
+devices. Third, SciPy must not silently transfer arrays between devices (e.g.\ between
+the CPU and GPU) because, as discussed above, this can incur a significant performance
+penalty. Instead, any device transfers (e.g.\ to ensure all arrays are on the same
+device) must be explicitly performed by the user. These principles help to avoid
+unexpected performance issues and scenarios where it is ambiguous what the correct
+behaviour should be.
+
 \begin{figure}
     \centering
     \includegraphics{figures/benchmark.pdf}
@@ -334,10 +345,13 @@ is difficult to comment on coverage when we do not yet know what it will be.} No
 this table omits legacy modules and modules that are not within the scope of the
 conversion. This includes \texttt{scipy.datasets} and \texttt{scipy.io}, both of which
 involve reading binary files that must first be loaded into CPU memory; we therefore
-defer conversion to the user's preferred array type. Future versions of SciPy will
-continue to expand the number of functions supporting alternative array libraries, as
+defer conversion to the user's preferred array type.
+
+Future versions of SciPy will
+continue to expand the number of functions supporting alternative array libraries as
 well as add support for additional features, such as PyTorch's compilation mechanism,
-\texttt{torch.compile}.
+\texttt{torch.compile}. \jake{Expand this as a future discussion section.}
+
 \section{A New Look at Language Choices}
 
 As discussed in~\cite{Virtanen2020}, much of SciPy's original success can be attributed
