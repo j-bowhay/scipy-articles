@@ -14,3 +14,4 @@
 paper.pdf
 /.vscode/*
 *.jsonl
+!/scipy-2.0/scripts/data/*.jsonl

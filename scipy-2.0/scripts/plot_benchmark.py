@@ -2,6 +2,7 @@
 
 import json
 import argparse
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +11,17 @@ import mpl_tectonic
 mpl_tectonic.enable()
 plt.style.use("scripts/scipy.mplstyle")
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="Plot the results of the benchmarking.")
+parser.add_argument(
+    "--save",
+    action="store_true",
+    help="Save the plot to the figures directory."
+)
+parser.add_argument(
+    "--paper-data",
+    action="store_true",
+    help="Use the data from the paper, rather than the latest benchmark results.",
+)
 args = parser.parse_args()
 
 line_styles = {
@@ -41,6 +52,11 @@ funcs = {
 fig = plt.figure(figsize=(5, 6), layout="constrained")
 subfigs = fig.subfigures(3, 1)
 
+if args.paper_data:
+    data_dir = Path(__file__).parent / "data_paper"
+else:
+    data_dir = Path(__file__).parent / "data"
+
 for (func, title), (i, subfig) in zip(funcs.items(), enumerate(subfigs)):
     axl, axr = subfig.subplots(1, 2)
     subfig.suptitle(title[1])
@@ -52,7 +68,7 @@ for (func, title), (i, subfig) in zip(funcs.items(), enumerate(subfigs)):
         va="top",
         fontsize="medium",
     )
-    with open(f"scripts/{func}_benchmark_timings.jsonl", "r") as f:
+    with open(data_dir / f"{func}_benchmark_timings.jsonl", "r") as f:
         for line in f:
             data = json.loads(line)
             axl.loglog(
@@ -70,4 +86,6 @@ for (func, title), (i, subfig) in zip(funcs.items(), enumerate(subfigs)):
 axl.set_xlabel("Problem size $n$")
 axr.set_xlabel("Problem size $n$")
 fig.legend(ncols=4, loc="outside lower center")
+if args.save:
+    plt.savefig(Path(__file__).parent.parent / "src" / "figures" / "benchmark.pdf")
 plt.show()
