@@ -235,8 +235,9 @@ While enabling users to use SciPy with their preferred array types is valuable i
 own right, it can also provide substantial performance benefits. We quantify these
 benefits through a series of benchmarks covering the different approaches to adopting
 the Array API Standard discussed above. All benchmarks
-were executed on an Intel Core Ultra 7 165H and
-an NVIDIA GeForce RTX 2050. Code to reproduce the benchmarks is available at
+were executed on an Intel\textsuperscript{\textregistered}
+Xeon\textsuperscript{\textregistered} Platinum 8468V Processor and
+an NVIDIA H100 GPU. Code to reproduce the benchmarks is available at
 \href{https://github.com/scipy/scipy-articles}{github.com/scipy/scipy-articles}.
 Additional benchmarks are also presented in~\cite{Meurer2023,rotaion,rbf_bench}.
 
@@ -250,16 +251,6 @@ skewness of three samples of size $n$, drawn from the gamma distribution (with s
 and scale parameters 5 and 0.5), the standard normal distribution, and the beta
 distribution (with shape parameters 0.5 and 0.5). The computation is performed in
 a vectorised fashion, with only one call to \texttt{scipy.stats.skew}.
-As shown in Figure~\ref{fig:benchmarks}(a), JAX JIT compilation provides a
-significant performance benefit, with CPU computations approximately 5--40 times
-faster than NumPy and GPU computations approximately 5--90 times
-faster, depending on $n$. Likewise, CuPy, which only supports GPU execution, provides
-a 2--4$\times$ speedup over NumPy for $n \gtrsim 10^5$. PyTorch arrays on the CPU
-are approximately comparable NumPy, while GPU execution provides a
-2--4.5$\times$ speedup for $n \gtrsim 10^5$. Note that PyTorch's performance is currently limited by
-SciPy's lack of support for PyTorch's JIT compilation. Finally, across all benchmarks,
-JAX in eager mode is often significantly slower than NumPy because of the per-call
-dispatch overhead associated with individual array operations.
 
 The second benchmark considers estimating the power spectral density of a signal using
 Welch's method~\cite{Welch1967} with \texttt{scipy.signal.welch}. For JAX and CuPy, this
@@ -270,12 +261,7 @@ included. The test signal consists of a \SI{2}{\volt_{\mathrm{RMS}}} sine wave a
 \SI{1234}{\hertz}, corrupted by additive white Gaussian noise with a one-sided power
 spectral density of \SI{0.001}{\volt\squared\per\hertz}, sampled at \SI{10}{\kilo\hertz}
 for $n$ data points. This benchmark was also considered in~\cite{Meurer2023}; however,
-here we present the results in more detail. Again, JAX JIT compilation provides a
-significant performance benefit, with a 40--15075 times and 2.5--1855 times
-speedup over NumPy for CPU and GPU execution, respectively. CuPy provides a
-3--25 times speedup for $n \gtrsim 10^5$. As the PyTorch implementation is based on
-converting the input array to a NumPy array, it has performance comparable to NumPy,
-with only a negligible decrease in performance.
+here we present the results in more detail.
 
 Finally, the third benchmark considers a series of operations involving rotations using
 \path{scipy.spatial.transform.Rotation}. This is an example of functionality for which
@@ -284,14 +270,21 @@ Python code path written in terms of standardised APIs for other array types. Th
 to maintain satisfactory performance for NumPy arrays while also supporting other array
 types. The benchmark considers converting a series of $n$ random rotations, represented
 as Euler angles, to quaternions, computing the chordal $L_2$ mean~\cite{Hartley2013} of
-the rotations, and then converting the resulting mean back to Euler angles. As expected,
-when $n \lesssim 10^4$, the compiled Cython code path for NumPy arrays is generally
-faster than the generic Python code path for other array types. However, for
-$n \gtrsim 10^4$, this gap closes, and alternative array types can provide a modest
-performance benefit. The most significant performance increase is JAX JIT compilation,
-which, when executed on the GPU, provides a 5--25 times speedup over NumPy. For
-further benchmarks of SciPy's rotation and rigid-body transformation functionality,
-see~\cite{rotaion}.
+the rotations, and then converting the resulting mean back to Euler angles.
+
+The result of these benchmarks is shown in Figure~\ref{fig:benchmarks}. In general,
+these results show that for large problem sizes, using alternative array types can
+provide significant performance benefits over NumPy. For small problem sizes, we see
+that, with the exception JAX-JIT, the NumPy is still typically fastest option due
+to the lower overhead of using NumPy arrays. However, for large problem sizes, other
+array types are favoured. The benchmarks also highlight the different performance
+characteristics of the approaches for handling compiled code discussed above.
+For example, in the Welch's method benchmark, we see that using PyTorch arrays offers
+no performance benefit as the implementation is based on converting the input array to a
+NumPy array, performing the computation, and then converting the result back to a
+PyTorch array. Likewise, in the rotation benchmark, we see that NumPy is very
+competitive for small problem sizes due to the fact it uses a compiled code path while
+other array types use a Python code path.
 
 \begin{table}
   \caption{Coverage of modules in SciPy 2.0 supporting alternative array types.
