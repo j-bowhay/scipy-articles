@@ -239,7 +239,7 @@ were executed on an Intel\textsuperscript{\textregistered}
 Xeon\textsuperscript{\textregistered} Platinum 8468V Processor and
 an NVIDIA H100 GPU. Code to reproduce the benchmarks is available at
 \href{https://github.com/scipy/scipy-articles}{github.com/scipy/scipy-articles}.
-Additional benchmarks are also presented in~\cite{Meurer2023,rotaion,rbf_bench}.
+Additional benchmarks are also presented in~\cite{Meurer2023,rotation,rbf_bench}.
 
 The first benchmark considers the computation of the sample skewness,
 $\gamma_1 = \mu_3/\mu_2^{3/2}$, where $\mu_i$ is the biased $i$th central sample
@@ -257,7 +257,7 @@ Welch's method~\cite{Welch1967} with \texttt{scipy.signal.welch}. For JAX and Cu
 function is delegated to their native implementations; for other array types, the input
 array is converted to a NumPy array, the computation is performed, and the result is
 converted back to the original array type. Consequently, PyTorch GPU results are not
-included. The test signal consists of a \SI{2}{\volt_{\mathrm{RMS}}} sine wave at
+included. The signal consists of a \SI{2}{\volt_{\mathrm{RMS}}} sine wave at
 \SI{1234}{\hertz}, corrupted by additive white Gaussian noise with a one-sided power
 spectral density of \SI{0.001}{\volt\squared\per\hertz}, sampled at \SI{10}{\kilo\hertz}
 for $n$ data points. This benchmark was also considered in~\cite{Meurer2023}; however,
@@ -272,10 +272,10 @@ types. The benchmark considers converting a series of $n$ random rotations, repr
 as Euler angles, to quaternions, computing the chordal $L_2$ mean~\cite{Hartley2013} of
 the rotations, and then converting the resulting mean back to Euler angles.
 
-The result of these benchmarks is shown in Figure~\ref{fig:benchmarks}. In general,
+The result of these benchmarks are shown in Figure~\ref{fig:benchmarks}. In general,
 these results show that for large problem sizes, using alternative array types can
 provide significant performance benefits over NumPy. For small problem sizes, we see
-that, with the exception JAX-JIT, the NumPy is still typically fastest option due
+that, with the exception of JAX-JIT, the NumPy is still typically the fastest option due
 to the lower overhead of using NumPy arrays. However, for large problem sizes, other
 array types are favoured. The benchmarks also highlight the different performance
 characteristics of the approaches for handling compiled code discussed above.
