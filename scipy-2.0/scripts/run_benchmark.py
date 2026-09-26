@@ -49,7 +49,7 @@ elif args.function == "welch":
     from scipy.signal import welch
 
     def func(data):
-        return welch(data, nperseg=256)[0]
+        return welch(data, fs=10_000, nperseg=256)[1]
 
     def data_generator(n):
         rng = np.random.default_rng(738274923759827)
